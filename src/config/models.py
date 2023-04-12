@@ -1,9 +1,38 @@
 from .base import BaseConfig
+from typing import Dict, Any
+from pydantic import PostgresDsn, validator
+
+
+class DBConfig(BaseConfig):
+    """A class that describes a db object formed from the environment
+        variable belonged to postgres info.
+
+    Returns:
+        string: it builds an `URI` object from database environment variable
+    """
+
+    class Config:
+        env_prefix = "DB_"
+
+    USERNAME: str
+    PASSWORD: str
+    URL: str
+    DATABASE: str
+    PORT: int = 5432
+    URI: str = ""
+
+    @validator("URI")
+    def set_uri(v: str, values: Dict[str, Any]) -> str:
+        uri: str = PostgresDsn.build(
+            scheme="postgresql",
+            user=values["USERNAME"],
+            password=values["PASSWORD"],
+            host=values["URL"],
+            port=str(values["PORT"]),
+            path=f"/{values['DATABASE']}",
+        )
+        return uri
 
 
 class Config(BaseConfig):
-    DB_USERNAME: str
-    DB_PASSWORD: str
-    DB_URL: str
-    DB_DATABASE: str
-    DB_PORT: int
+    db: DBConfig
