@@ -1,0 +1,12 @@
+# .flake8
+[flake8]
+max-line-length = 88
+extend-ignore = E203
+
+exclude =
+    # Exclude .git, virtualenv, cache and build dirs
+    .git
+    .venv
+    __pycache__
+    dist
+    .pytest_tmpdir

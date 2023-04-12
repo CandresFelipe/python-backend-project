@@ -1,0 +1,55 @@
+[tool.poetry]
+name = "python-backend-project"
+version = "0.1.0"
+description = ""
+authors = ["CandresFelipe <carrerafandres2496@gmail.com>"]
+readme = "README.md"
+packages = [{ include = "python_backend_project" }]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.95.0"
+uvicorn = { extras = ["standard"], version = "^0.21.1" }
+sqlalchemy = "^2.0.9"
+sqlalchemy-utils = "^0.40.0"
+pydantic = "^1.10.7"
+psycopg2 = "^2.9.6"
+
+
+[tool.poetry.group.lint.dependencies]
+isort = "^5.12.0"
+black = "^23.3.0"
+flake8 = "^6.0.0"
+mypy = "^1.2.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+# 3rd party import
+ignore_missing_imports = true
+# dynamic typing
+disallow_any_unimported = true
+disallow_any_expr = false
+disallow_any_decorated = false
+disallow_any_explicit = false
+disallow_any_generics = false
+disallow_subclassing_any = true
+# platform
+python_version = "3.10"
+# untyped
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+# None and Optional
+no_implicit_optional = true
+# Warnings
+warn_return_any = false
+warn_unreachable = true
+# Misc
+pretty = true
