@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
-from .client import DBClientManager
+
+from database.client import DBClientManager
 
 
 class SQLUnitOfWork:

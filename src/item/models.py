@@ -1,7 +1,7 @@
-from database.base import SQLAlchemyDeclarativeBase
-from sqlalchemy import Column, String, URL, Integer
-
+from sqlalchemy import URL, Column, Integer, String
 from sqlalchemy.orm import Mapped
+
+from database.sql_base import SQLAlchemyDeclarativeBase
 
 
 class Item(SQLAlchemyDeclarativeBase):

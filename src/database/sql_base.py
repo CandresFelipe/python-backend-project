@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer
-from sqlalchemy.orm import declared_attr, Mapped
-from .types import mapper_registry
+from sqlalchemy.orm import Mapped, declared_attr
+
+from .type import mapper_registry
 
 # I use declarative mapping with decorators following this doc
 # https://docs.sqlalchemy.org/en/14/orm/mapping_api.html#sqlalchemy.orm.registry.as_declarative_base
