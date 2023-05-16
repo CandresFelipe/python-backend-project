@@ -17,4 +17,4 @@ class SQLAlchemyDeclarativeBase(object):
 
     @declared_attr
     def __tablename__(cls) -> Mapped[str]:
-        return cls.__tablename__.upper()
+        return cls.__tablename__.lower()
