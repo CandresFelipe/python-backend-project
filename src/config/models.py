@@ -1,6 +1,8 @@
-from .base import BaseConfig
-from typing import Dict, Any
+from typing import Any, Dict
+
 from pydantic import PostgresDsn, validator
+
+from .base import BaseConfig
 
 
 class DBConfig(BaseConfig):

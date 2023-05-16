@@ -1,5 +1,4 @@
-from .models import Config
-from .models import DBConfig
+from .models import Config, DBConfig
 
 
 def get_config() -> Config:
