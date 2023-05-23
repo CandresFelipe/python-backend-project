@@ -1,5 +1,6 @@
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+
+from database.type import Session
 
 from .models import Item
 
