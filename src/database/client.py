@@ -6,6 +6,7 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session, sessionmaker
 
+from config.models import DBConfig
 from database.type import mapper_registry
 
 
@@ -25,6 +26,10 @@ class DBClientManager:
     def session(self) -> Session:
         return self._session
 
+    @classmethod
+    def get_from_config(cls, config: DBConfig):
+        return cls(url=config.URI)
+
     @contextlib.contextmanager
     def managed_session(self) -> Iterator[Session]:
         try:
@@ -37,3 +42,7 @@ class DBClientManager:
 
     def _exc_raise(self, exc: Exception) -> NoReturn:
         raise print(f"Encountered SQLAlchemyError : {exc}") from exc
+
+    def shutdown(self) -> None:
+        print("stopping database connection...")
+        self._engine.dispose()

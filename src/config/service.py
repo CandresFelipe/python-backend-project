@@ -1,3 +1,7 @@
+import sys
+
+from pydantic import ValidationError
+
 from .models import Config, DBConfig
 
 
@@ -7,4 +11,8 @@ def get_config() -> Config:
     Returns:
         Config: It returns a config instance
     """
-    return Config(db=DBConfig())
+    try:
+        return Config(db=DBConfig())
+    except ValidationError as exc:
+        f"Application configuration error: {exc.errors()}"
+        sys.exit(1)

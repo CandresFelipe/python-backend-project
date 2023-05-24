@@ -37,4 +37,6 @@ class DBConfig(BaseConfig):
 
 
 class Config(BaseConfig):
+    DEBUG: bool = False
+
     db: DBConfig
