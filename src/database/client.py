@@ -1,7 +1,8 @@
 import contextlib
+import importlib
 from typing import Iterator, NoReturn
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, inspect
 from sqlalchemy.engine import Engine
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session, sessionmaker
@@ -15,7 +16,6 @@ class DBClientManager:
         self.url = url
         self._engine: Engine = create_engine(self.url, echo=True)
         self._session = sessionmaker(autocommit=False, bind=self._engine)
-
         self._registry = mapper_registry
 
     @property
@@ -46,3 +46,16 @@ class DBClientManager:
     def shutdown(self) -> None:
         print("stopping database connection...")
         self._engine.dispose()
+
+    def create_or_update_models(self) -> None:
+        inspector = inspect(self._engine)
+        existing_tables = inspector.get_table_names()
+
+        models_module = importlib.import_module("database.models")
+
+        for model_name in models_module.__all__:
+            model = getattr(models_module, model_name)
+            table_name = model.__tablename__
+
+            if table_name not in existing_tables:
+                self._registry.metadata.tables[table_name].create(bind=self._engine)

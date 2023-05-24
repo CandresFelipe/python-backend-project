@@ -17,7 +17,7 @@ def create_app(
     )
 
     app = Application(debug=config.DEBUG, on_shutdown=[db_clientManager.shutdown])
-
+    db_clientManager.create_or_update_models()
     app.include_router(router)
 
     app.add_middleware(
