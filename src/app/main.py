@@ -1,9 +1,7 @@
-import sys
-
+from app_logging import setup_logging
 import click
 from services import check_database_connection, check_postgresql_service
 from sqlalchemy_utils import create_database, database_exists
-
 from config.service import get_config
 from database.client import DBClientManager
 
@@ -22,17 +20,36 @@ def init_database() -> None:
 
     if database_exists(config.db.URI):
         print("Database already exist")
-        raise sys.exit(1)
-    create_database(config.db.URI)
+    else:
+        create_database(config.db.URI)
+
+    # run migrations
+    database_client = DBClientManager(config.db.URI)
+    database_client.run_migrations()
 
 
 @click.command()
 @click.option("--host", default="localhost", help="Server host")
-@click.option("--port", default=8000, help="Server host")
+@click.option("--port", default=5000, help="Server host")
 def init_app(host, port):
     import uvicorn
+    from app_logging import logging_config
 
-    uvicorn.run("app.factory:create_app", host=host, port=port, factory=True)
+    config = uvicorn.Config(
+        "app.factory:create_app",
+        host=host,
+        port=port,
+        factory=True,
+        log_config=logging_config(),
+    )
+    server = uvicorn.Server(config)
+    setup_logging()
+    server.run()
+
+
+@click.group()
+def cli() -> None:
+    ...
 
 
 @click.command()
@@ -42,11 +59,6 @@ def start() -> None:
     subprocess.run(["python", "src/app/main.py", "check-postgres-server"])
     subprocess.run(["python", "src/app/main.py", "init-database"])
     subprocess.run(["python", "src/app/main.py", "init-app"])
-
-
-@click.group()
-def cli() -> None:
-    ...
 
 
 cli.add_command(check_postgres_server)
