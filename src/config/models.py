@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, Literal
 
 from pydantic import PostgresDsn, validator
 
@@ -36,7 +36,11 @@ class DBConfig(BaseConfig):
         return uri
 
 
+Logger_level = Literal["INFO", "DEBUG", "ERROR", "CRITICAL", "TRACE", "WARNING"]
+
+
 class Config(BaseConfig):
     DEBUG: bool = False
+    LOG_LEVEL: Logger_level = "INFO"
 
     db: DBConfig

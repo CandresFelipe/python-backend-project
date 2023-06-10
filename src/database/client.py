@@ -1,8 +1,8 @@
 import contextlib
-import importlib
+import database.operations as operations
 from typing import Iterator, NoReturn
 
-from sqlalchemy import create_engine, inspect
+from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session, sessionmaker
@@ -47,15 +47,10 @@ class DBClientManager:
         print("stopping database connection...")
         self._engine.dispose()
 
-    def create_or_update_models(self) -> None:
-        inspector = inspect(self._engine)
-        existing_tables = inspector.get_table_names()
+    def startup(self) -> None:
+        print("running startup...")
+        self.run_migrations()
 
-        models_module = importlib.import_module("database.models")
-
-        for model_name in models_module.__all__:
-            model = getattr(models_module, model_name)
-            table_name = model.__tablename__
-
-            if table_name not in existing_tables:
-                self._registry.metadata.tables[table_name].create(bind=self._engine)
+    def run_migrations(self) -> None:
+        operations.run_migrations(self.url)
+        print("Migrations ran")
